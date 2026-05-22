@@ -9,7 +9,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+    <!-- FIXED STATIC PATH -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
@@ -28,69 +29,80 @@
             <div>
 
                 <h1 class="h4 mb-1 fw-bold">
-                    HardwareNexus Staff Dashboard
+                    NEXUS Hardware
                 </h1>
 
                 <small class="text-muted">
-                    View and request available hardware assets
+                    Inventory Management System
                 </small>
 
             </div>
 
         </div>
 
+        <!-- SEARCH -->
         <div class="navbar-search-wrapper d-flex justify-content-center flex-grow-1 order-3 order-md-2">
+
             <div class="collapse navbar-search-collapse show w-100" id="navbarSearchCollapse">
-                <div class="search-container d-flex align-items-center">
+
+                <div class="search-container d-flex align-items-center gap-2">
+
                     <i class="bi bi-search text-muted"></i>
-                    <input
-                        id="navSearchId"
-                        type="text"
-                        placeholder="Search Asset ID..."
-                        class="flex-grow-1"
-                    >
-                    <button
-                        type="button"
-                        onclick="searchHardwareModal()"
-                    >
+
+                    <input id="navSearchId" type="text" placeholder="Search Asset ID..." class="form-control">
+
+                    <button class="btn btn-primary" type="button" onclick="searchHardwareModal()">
                         Search
                     </button>
+
                 </div>
             </div>
         </div>
 
+        <!-- USER -->
         <div class="d-flex align-items-center gap-2 order-2 order-md-3">
-            <button class="btn btn-outline-secondary d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSearchCollapse" aria-expanded="false" aria-controls="navbarSearchCollapse">
+
+            <button class="btn btn-outline-secondary d-md-none"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarSearchCollapse">
                 <i class="bi bi-search"></i>
             </button>
 
             <div class="dropdown">
-                <button class="btn btn-outline-secondary btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open user menu">
+
+                <button class="btn btn-outline-secondary btn-user dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown">
+
                     <span class="user-toggle-text">
-                        <span class="user-name" id="navbarUserName" th:text="${staffName}">User Name</span>
-                        <small class="user-role text-muted" id="navbarUserRole" th:text="${staffRole}">User Role</small>
+                        <span class="user-name" th:text="${staffName}">User Name</span>
+                        <small class="user-role text-muted" th:text="${staffRole}">Role</small>
                     </span>
+
                     <i class="bi bi-person-circle fs-5"></i>
                 </button>
+
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                                <div class="dropdown-user px-3 py-3 d-flex align-items-center gap-3 justify-content-between">
-                            <div class="user-details text-start">
-                                <div class="user-name fw-bold" id="navbarUserNameDetail" th:text="${staffName}">User Name</div>
-                                <div class="user-role text-muted small" id="navbarUserRoleDetail" th:text="${staffRole}">User Role</div>
-                            </div>
-                            <div class="user-avatar bg-primary text-white d-flex align-items-center justify-content-center">
-                                <i class="bi bi-person-fill"></i>
-                            </div>
-                        </div>
+
+                    <li class="px-3 py-2">
+                        <div class="fw-bold" th:text="${staffName}"></div>
+                        <small class="text-muted" th:text="${staffRole}"></small>
                     </li>
+
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" th:href="@{/staff-assets}" href="/staff-assets"><i class="bi bi-grid-fill me-2"></i>Dashboard</a></li>
-                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#profileModal"><i class="bi bi-pencil-square me-2"></i>Edit Profile</a></li>
-                    <li><a class="dropdown-item" href="#assetTable"><i class="bi bi-plus-circle me-2"></i>Request Asset</a></li>
-                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#requestHistoryModal"><i class="bi bi-box-seam me-2"></i>Asset Assigned</a></li>
+
+                    <li><a class="dropdown-item" href="#assetTable">
+                        <i class="bi bi-plus-circle me-2"></i>Request Asset</a></li>
+
+                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#assignedAssetsModal">
+                        <i class="bi bi-box-seam me-2"></i>Assigned Assets</a></li>
+
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-danger" th:href="@{/logout}" href="/logout"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
+
+                    <li><a class="dropdown-item text-danger" th:href="@{/logout}">
+                        <i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
+
                 </ul>
             </div>
         </div>
@@ -99,185 +111,88 @@
 
 </nav>
 
-<!-- MAIN CONTENT -->
-<main class="main-content my-5" id="mainContent">
+<!-- MAIN -->
+<main class="main-content my-5">
+
     <div id="alertBox"></div>
 
     <!-- HEADER -->
-    <section class="page-header mb-5">
-
-        <div>
-
-            <p class="eyebrow mb-2">
-                Staff Portal
-            </p>
-
-            <h2 class="fw-bold display-6 mb-3">
-                Hardware Asset Request Center
-            </h2>
-
-            <p class="text-muted mb-0">
-                View available inventory records, request hardware assets, and monitor request status.
-            </p>
-
-        </div>
-
+    <section class="mb-5">
+        <p class="eyebrow mb-2">Staff Portal</p>
+        <h2 class="fw-bold">Inventory Management System</h2>
+        <p class="text-muted">Request and track hardware assets.</p>
     </section>
 
-    <!-- STATS -->
-    <section class="row g-4 mb-5">
+    <!-- TABLE -->
+    <section id="assetTable" class="glass-card p-4">
 
-            <div class="col-md-3">
-            <div class="glass-card stat-box">
-                <div class="icon bg-soft-blue text-primary">
-                    <i class="bi bi-box-seam"></i>
-                </div>
-                <div>
-                    <div class="stat-label">
-                        Available Assets
-                    </div>
-                    <div id="availableAssetsCount" class="stat-value" th:text="${#lists.size(hardwareList)}">0</div>
-                </div>
-            </div>
-        </div>
+        <div class="d-flex justify-content-between mb-3">
 
-        <div class="col-md-3">
-            <div class="glass-card stat-box">
-                <div class="icon bg-soft-green text-success">
-                    <i class="bi bi-check-circle"></i>
-                </div>
-                <div>
-                    <div class="stat-label">
-                        In Stock
-                    </div>
-                    <div id="inStockCount" class="stat-value" th:text="${#aggregates.sum(hardwareList.![quantity])}">0</div>
-                </div>
-            </div>
-        </div>
+            <h5 class="fw-bold">Available Assets</h5>
 
-        <div class="col-md-3">
-            <div class="glass-card stat-box">
-                <div class="icon bg-soft-purple text-purple">
-                    <i class="bi bi-clock-history"></i>
-                </div>
-                <div>
-                    <div class="stat-label">
-                        My Requests
-                    </div>
-                    <div id="myRequestsCount" class="stat-value" th:text="${#lists.size(requestList)}">0</div>
-                </div>
-            </div>
-        </div>
+            <select id="categoryFilter"
+                    class="form-select w-auto"
+                    onchange="filterCategory()">
 
-        <div class="col-md-3">
-            <div class="glass-card stat-box">
-                <div class="icon bg-soft-blue text-primary">
-                    <i class="bi bi-person-badge"></i>
-                </div>
-                <div>
-                    <div class="stat-label">
-                        Access Role
-                    </div>
-                    <div id="accessRoleLabel" class="stat-value small" th:text="${staffRole}">Staff</div>
-                </div>
-            </div>
-        </div>
+                <option value="all">All</option>
 
-    </section>
+                <option th:each="c : ${categories}"
+                        th:value="${c}"
+                        th:text="${c}">
+                </option>
 
-    <!-- ASSET TABLE -->
-    <section id="assetTable" class="glass-card p-4 mb-4">
-
-        <!-- TABLE HEADER -->
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-
-            <div>
-
-                <h5 class="fw-bold mb-1">
-                    Available Hardware Assets
-                </h5>
-
-                <p class="text-muted mb-0">
-                    Staff can request available hardware assets from the database.
-                </p>
-
-            </div>
-
-            <!-- CATEGORY FILTER -->
-            <div class="d-flex align-items-center gap-2">
-
-                <label class="fw-semibold text-muted">
-                    Filter:
-                </label>
-
-                <select
-                    id="categoryFilter"
-                    class="form-select rounded-pill"
-                    onchange="filterCategory()"
-                    style="width: 220px;"
-                >
-                    <option value="all">
-                        All Categories
-                    </option>
-                    <option th:each="category : ${categories}"
-                            th:value="${category}"
-                            th:text="${category}">
-                    </option>
-                </select>
-
-            </div>
+            </select>
 
         </div>
 
-        <!-- TABLE -->
         <div class="table-responsive">
 
-            <table class="table table-borderless align-middle">
+            <table class="table">
 
                 <thead>
-
-                    <tr>
-
-                        <th>Asset ID</th>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Quantity</th>
-                        <th>Status</th>
-                        <th class="text-end">Action</th>
-
-                    </tr>
-
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Qty</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
                 </thead>
 
                 <tbody id="staffAssetTableBody">
-                    <tr th:if="${#lists.isEmpty(hardwareList)}">
-                        <td colspan="6" class="text-muted text-center py-4">
-                            No assets available.
-                        </td>
-                    </tr>
-                    <tr th:each="hardware : ${hardwareList}"
-                        th:attr="data-category=${hardware.category}">
-                        <td th:text="${hardware.assetId}"></td>
-                        <td th:text="${hardware.name}"></td>
-                        <td th:text="${hardware.category}"></td>
-                        <td th:text="${hardware.quantity}"></td>
-                        <td>
-                            <span class="badge rounded-pill"
-                                  th:classappend="${hardware.quantity > 0} ? ' text-bg-success' : ' text-bg-danger'"
-                                  th:text="${hardware.quantity > 0} ? 'Available' : 'Out of Stock'"></span>
-                        </td>
-                        <td class="text-end">
-                            <button
-                                class="btn btn-primary btn-sm rounded-pill px-3"
+
+                <tr th:if="${#lists.isEmpty(hardwareList)}">
+                    <td colspan="6" class="text-center text-muted">No assets</td>
+                </tr>
+
+                <tr th:each="h : ${hardwareList}"
+                    th:attr="data-category=${h.category}">
+
+                    <td th:text="${h.assetId}"></td>
+                    <td th:text="${h.name}"></td>
+                    <td th:text="${h.category}"></td>
+                    <td th:text="${h.quantity}"></td>
+
+                    <td>
+                        <span class="badge"
+                              th:classappend="${h.quantity > 0} ? ' bg-success' : ' bg-danger'"
+                              th:text="${h.quantity > 0} ? 'Available' : 'Out'">
+                        </span>
+                    </td>
+
+                    <td>
+                        <button class="btn btn-sm btn-primary"
                                 data-bs-toggle="modal"
                                 data-bs-target="#requestModal"
-                                th:attr="data-id=${hardware.assetId}, data-name=${hardware.name}"
+                                th:attr="data-id=${h.assetId}, data-name=${h.name}"
                                 onclick="fillRequestModal(this)">
-                                <i class="bi bi-plus-circle me-1"></i>
-                                Request
-                            </button>
-                        </td>
-                    </tr>
+                            Request
+                        </button>
+                    </td>
+
+                </tr>
+
                 </tbody>
 
             </table>
@@ -289,95 +204,70 @@
 </main>
 
 <!-- REQUEST MODAL -->
-<div class="modal fade" id="requestModal" tabindex="-1">
-
+<div class="modal fade" id="requestModal">
     <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
 
-        <div class="modal-content border-0 shadow-lg rounded-5">
-
-            <div class="modal-header border-0">
-
-                <div>
-
-                    <h5 class="modal-title fw-bold">
-                        Request Asset
-                    </h5>
-
-                    <p class="text-muted mb-0">
-                        Submit a request for hardware allocation.
-                    </p>
-
-                </div>
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                ></button>
-
+            <div class="modal-header">
+                <h5>Request Asset</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <div class="modal-body">
 
-                <form id="requestAssetForm" th:action="@{/request-asset}" method="post">
+                <form th:action="@{/request-asset}" method="post">
+
                     <input type="hidden" id="requestAssetId" name="assetId">
-
+                    
                     <input type="hidden" id="requestAssetName" name="assetName">
+                    
+                    <p class ="text-muted" >Asset Name</p>
+                    <input id="requestAssetDisplay" class="form-control mb-2" readonly>
+                    <p class ="text-muted" >Quantity</p>
+                    <input name="quantity" type="number" class="form-control mb-2" min="1" required>
+                    <p class ="text-muted" >Purpose</p>
+                    <textarea name="purpose" class="form-control mb-2" required></textarea>
 
-                    <div class="mb-3">
-
-                        <label class="form-label">
-                            Asset Name
-                        </label>
-
-                        <input
-                            type="text"
-                            id="requestAssetDisplay"
-                            class="form-control rounded-4"
-                            readonly
-                        >
-
-                    </div>
-
-                    <div class="mb-3">
-
-                        <label class="form-label">
-                            Quantity
-                        </label>
-
-                        <input
-                            type="number"
-                            name="quantity"
-                            class="form-control rounded-4"
-                            required
-                            min="1"
-                        >
-
-                    </div>
-
-                    <div class="mb-4">
-
-                        <label class="form-label">
-                            Purpose
-                        </label>
-
-                        <textarea
-                            name="purpose"
-                            class="form-control rounded-4"
-                            rows="4"
-                            required
-                        ></textarea>
-
-                    </div>
-
-                    <button
-                        type="submit"
-                        class="btn btn-primary w-100 rounded-pill py-3 fw-bold"
-                    >
-                        Submit Request
-                    </button>
+                    <button class="btn btn-primary w-100">Submit</button>
 
                 </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- SEARCH MODAL (ENHANCED) -->
+<div class="modal fade" id="searchModal" tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+
+        <div class="modal-content border-0 shadow-lg rounded-4">
+
+            <!-- HEADER -->
+            <div class="modal-header border-0">
+
+                <div>
+                    <h5 class="modal-title fw-bold">
+                        Search Results
+                    </h5>
+
+                </div>
+
+                <button type="button" class="btn-close " data-bs-dismiss="modal"></button>
+
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-body p-3">
+
+                <!-- RESULTS CONTAINER -->
+                <div id="modalSearchResult" class="d-flex flex-column gap-3">
+
+                    <!-- JS injects cards here -->
+
+                </div>
 
             </div>
 
@@ -387,74 +277,113 @@
 
 </div>
 
-<!-- REQUEST HISTORY MODAL -->
-<div
-    class="modal fade"
-    id="requestHistoryModal"
-    tabindex="-1"
->
+<!-- MY ASSETS MODAL (PENDING + ASSIGNED) -->
+<div class="modal fade" id="assignedAssetsModal" tabindex="-1">
 
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
 
-        <div class="modal-content border-0 shadow-lg rounded-5">
+        <div class="modal-content border-0 shadow-lg rounded-4">
 
-            <div class="modal-header border-0 pb-0">
+            <!-- HEADER -->
+            <div class="modal-header border-0">
 
                 <div>
-
-                    <h4 class="fw-bold mb-1">
-                        Request History
-                    </h4>
-
-                    <p class="text-muted mb-0">
-                        Monitor submitted asset requests and approval status.
-                    </p>
-
+                    <h5 class="modal-title fw-bold">
+                        My Assets
+                    </h5>
+                    <small class="text-muted">
+                        Pending requests and assigned hardware
+                    </small>
                 </div>
 
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                ></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 
             </div>
 
-            <div class="modal-body p-4">
+            <!-- BODY -->
+            <div class="modal-body p-3">
 
                 <div class="table-responsive">
 
-                    <table class="table table-borderless align-middle">
+                    <table class="table align-middle">
 
-                        <thead>
-
+                        <thead class="table-light">
                             <tr>
-
                                 <th>Asset</th>
+                                <th>Category</th>
                                 <th>Quantity</th>
-                                <th>Purpose</th>
                                 <th>Status</th>
-
+                                <th>Date</th>
+                                <th class="text-end">Action</th>
                             </tr>
-
                         </thead>
 
-                        <tbody id="requestHistoryTableBody">
-                            <tr th:if="${#lists.isEmpty(requestList)}">
-                                <td colspan="4" class="text-muted text-center py-4">
-                                    No requests submitted yet.
-                                </td>
-                            </tr>
-                            <tr th:each="request : ${requestList}">
-                                <td th:text="${request.assetName}"></td>
-                                <td th:text="${request.quantity}"></td>
-                                <td th:text="${request.purpose}"></td>
-                                <td>
-                                    <span class="badge rounded-pill"
-                                          th:classappend="${request.status == 'Approved'} ? ' text-bg-success' : (${request.status == 'Declined'} ? ' text-bg-danger' : ' text-bg-warning')"
-                                          th:text="${request.status}"></span>
-                                </td>
-                            </tr>
+                        <tbody>
+
+                        <!-- EMPTY STATE -->
+                        <tr th:if="${#lists.isEmpty(myAssetList)}">
+                            <td colspan="6" class="text-center text-muted py-4">
+                                No requests or assigned assets.
+                            </td>
+                        </tr>
+
+                        <!-- LOOP -->
+                        <tr th:each="r : ${myAssetList}">
+
+                            <td class="fw-semibold" th:text="${r.assetName}"></td>
+
+                            <td th:text="${r.category}"></td>
+
+                            <td th:text="${r.quantity}"></td>
+
+                            <!-- STATUS BADGE -->
+                            <td>
+
+                                <span class="badge rounded-pill"
+                                      th:classappend="
+                                        ${r.status == 'Pending'} ? ' bg-warning text-dark' :
+                                        (${r.status == 'Approved'} ? ' bg-success' :
+                                        ' bg-danger')"
+                                      th:text="${r.status}">
+                                </span>
+
+                            </td>
+
+                            <td th:text="${r.dateCreated}"></td>
+
+                            <!-- ACTION -->
+                            <td class="text-end">
+
+                                <!-- IF PENDING -->
+                                <button th:if="${r.status == 'Pending'}"
+                                        class="btn btn-sm btn-outline-secondary rounded-pill"
+                                        disabled>
+                                    Waiting Approval
+                                </button>
+
+                                <!-- IF APPROVED -->
+                                <button th:if="${r.status == 'Approved'}"
+                                        class="btn btn-sm btn-primary rounded-pill">
+                                    View Assigned
+                                </button>
+
+                                <!-- OPTIONAL RETURN -->
+                                <button th:if="${r.status == 'Approved'}"
+                                        class="btn btn-sm btn-outline-danger rounded-pill">
+                                    Return
+                                </button>
+
+                                <!-- IF REJECTED -->
+                                <button th:if="${r.status == 'Rejected'}"
+                                        class="btn btn-sm btn-danger rounded-pill"
+                                        disabled>
+                                    Rejected
+                                </button>
+
+                            </td>
+
+                        </tr>
+
                         </tbody>
 
                     </table>
@@ -469,123 +398,11 @@
 
 </div>
 
-<!-- PROFILE MODAL -->
-<div class="modal fade" id="profileModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg rounded-5">
-            <div class="modal-header border-0">
-                <div>
-                    <h5 class="modal-title fw-bold">Edit Profile</h5>
-                    <p class="text-muted mb-0">Update your profile name and role.</p>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="profileForm">
-                    <div class="mb-3">
-                        <label class="form-label">Full Name</label>
-                        <input type="text" id="profileName" class="form-control rounded-4" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" id="profileEmail" class="form-control rounded-4" required readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Role</label>
-                        <select id="profileRole" class="form-select rounded-pill" required>
-                            <option value="manager">Manager</option>
-                            <option value="staff">Staff</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold">Save Changes</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- SEARCH MODAL -->
-<div class="modal fade" id="searchModal" tabindex="-1">
-
-    <div class="modal-dialog modal-dialog-centered">
-
-        <div class="modal-content border-0 shadow-lg rounded-5">
-
-            <div
-                class="modal-body p-5 text-center"
-                id="modalSearchResult"
-            ></div>
-
-        </div>
-
-    </div>
-
-</div>
-
 <!-- JS -->
-<script>
 
-    function toggleProfileMenu() {
-
-        document
-            .getElementById("profileDropdown")
-            .classList
-            .toggle("show");
-    }
-
-    function fillRequestModal(button) {
-
-        const assetId =
-            button.getAttribute("data-id");
-
-        const assetName =
-            button.getAttribute("data-name");
-
-        document.getElementById("requestAssetId").value = assetId;
-
-        document.getElementById("requestAssetName").value = assetName;
-
-        document.getElementById("requestAssetDisplay").value = assetName;
-    }
-
-    function filterCategory() {
-
-        const selected =
-            document
-                .getElementById("categoryFilter")
-                .value
-                .toLowerCase();
-
-        const rows =
-            document.querySelectorAll("tbody tr[data-category]");
-
-        rows.forEach(row => {
-
-            const category =
-                row
-                    .getAttribute("data-category")
-                    .toLowerCase();
-
-            if (selected === "all") {
-
-                row.style.display = "";
-
-            } else {
-
-                row.style.display =
-                    category === selected
-                    ? ""
-                    : "none";
-            }
-
-        });
-    }
-
-</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<script src="../static/js/app.js"></script>
+<script src="../static/js/app.js" th:src="@{/js/app.js}"></script>
 
 </body>
 </html>

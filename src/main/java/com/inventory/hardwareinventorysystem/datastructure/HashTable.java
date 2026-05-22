@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 /**
  * Hash table implementation using separate chaining.
+ * Enforces a strict static capacity of 11 buckets.
  */
 public class HashTable {
 
@@ -12,44 +13,61 @@ public class HashTable {
     private int size;
     private int itemCount;
 
-    private static final double LOAD_FACTOR_LIMIT = 0.75;
-
-    public HashTable(int size) {
-        this.size = size;
+    @SuppressWarnings("unchecked")
+    public HashTable(int ignoredSize) {
+        // Enforce the size constraint of 11 buckets
+        this.size = 11;
         this.itemCount = 0;
 
-        table = new LinkedList[size];
+        table = new LinkedList[this.size];
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < this.size; i++) {
             table[i] = new LinkedList<>();
         }
     }
 
     private int hash(String key) {
-        return Math.abs(key.hashCode()) % size;
+        if (key == null) {
+            return 0;
+        }
+        
+        int numericValue = 0;
+        for (int i = 0; i < key.length(); i++) {
+            char c = key.charAt(i);
+            
+            if (Character.isDigit(c)) {
+                numericValue = (numericValue * 10) + Character.getNumericValue(c);
+            } else {
+                numericValue = (numericValue * 31) + c;
+            }
+            numericValue = numericValue % 0x7FFFFFFF;
+        }
+
+        return Math.abs(numericValue) % size;
     }
 
     public void insert(Hardware item) {
-        if ((double) itemCount / size >= LOAD_FACTOR_LIMIT) {
-            resize();
-        }
-
         int index = hash(item.getAssetId());
+        
+        for (int i = 0; i < table[index].size(); i++) {
+            if (table[index].get(i).getAssetId().equalsIgnoreCase(item.getAssetId())) {
+                table[index].set(i, item); 
+                return;
+            }
+        }
+        
         table[index].add(item);
         itemCount++;
     }
 
     public Hardware search(String assetId) {
         int index = hash(assetId);
-       
 
         for (Hardware item : table[index]) {
             if (item.getAssetId().equalsIgnoreCase(assetId)) {
                 return item;
             }
         }
-        
-
         return null;
     }
 
@@ -63,29 +81,7 @@ public class HashTable {
                 return true;
             }
         }
-
         return false;
-    }
-
-    private void resize() {
-        LinkedList<Hardware>[] oldTable = table;
-
-        size *= 2;
-        table = new LinkedList[size];
-
-        for (int i = 0; i < size; i++) {
-            table[i] = new LinkedList<>();
-        }
-
-        itemCount = 0;
-
-        for (LinkedList<Hardware> bucket : oldTable) {
-            for (Hardware item : bucket) {
-                int index = hash(item.getAssetId());
-                table[index].add(item);
-                itemCount++;
-            }
-        }
     }
 
     public LinkedList<Hardware>[] getTable() {

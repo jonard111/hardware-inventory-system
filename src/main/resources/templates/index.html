@@ -65,8 +65,8 @@
             <div class="dropdown">
                 <button class="btn btn-outline-secondary btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open user menu">
                     <span class="user-toggle-text">
-                        <span class="user-name" id="navbarUserName">User Name</span>
-                        <small class="user-role text-muted" id="navbarUserRole">User Role</small>
+                        <span class="user-name" th:text="${staffName}">User Name</span>
+                        <small class="user-role text-muted" th:text="${staffRole}">Role</small>
                     </span>
                     <i class="bi bi-person-circle fs-5"></i>
                 </button>
@@ -74,8 +74,8 @@
                     <li>
                         <div class="dropdown-user px-3 py-3 d-flex align-items-center gap-3 justify-content-between">
                             <div class="user-details text-start">
-                                <div class="user-name fw-bold" id="navbarUserNameDetail">User Name</div>
-                                <div class="user-role text-muted small" id="navbarUserRoleDetail">User Role</div>
+                                <div class="user-name fw-bold" id="navbarUserNameDetail" th:text="${staffName}">User Name</div>
+                                <div class="user-role text-muted small" id="navbarUserRoleDetail" th:text="${staffRole}">User Role</div>
                             </div>
                             <div class="user-avatar bg-primary text-white d-flex align-items-center justify-content-center">
                                 <i class="bi bi-person-fill"></i>
@@ -83,7 +83,6 @@
                         </div>
                     </li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#profileModal"><i class="bi bi-pencil-square me-2"></i>Edit Profile</a></li>
                     <li><a class="dropdown-item" href="#" onclick="setInventoryView('requests')"><i class="bi bi-table me-2"></i>Asset Request Approval</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item text-danger" th:href="@{/login}" href="/login"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
@@ -119,21 +118,7 @@
 
         </div>
 
-        <div class="d-flex flex-wrap gap-2 mt-3 mt-md-0">
-
-            <button
-                class="btn btn-primary rounded-pill px-4 py-2"
-                type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#registerAssetModal"
-            >
-
-                <i class="bi bi-plus-circle me-1"></i>
-                Add New Asset
-
-            </button>
-
-        </div>
+        
 
     </section>
 
@@ -279,6 +264,21 @@
                         </p>
 
                     </div>
+                    <div class="d-flex flex-wrap gap-2 mt-3 mt-md-0">
+
+            <button
+                class="btn btn-primary rounded-pill px-4 py-2"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#registerAssetModal"
+            >
+
+                <i class="bi bi-plus-circle me-1"></i>
+                Add New Asset
+
+            </button>
+
+        </div>
 
                     <div class="asset-filter w-100 w-md-auto">
 
@@ -361,7 +361,7 @@
 
                 </div>
 
-                <div id="buckets" class="row g-3"></div>
+               <div id="buckets" class="hash-visual-container"></div>
 
             </div>
 
@@ -464,157 +464,90 @@
     </div>
 </div>
 
-<!-- ADD ASSET MODAL -->
-<div
-    class="modal fade"
-    id="registerAssetModal"
-    tabindex="-1"
-    aria-hidden="true"
->
-
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-
+<div class="modal fade" id="registerAssetModal" tabindex="-1" aria-labelledby="registerAssetModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg rounded-5">
-
-            <div class="modal-header border-0">
-
-                <div>
-
-                    <h5 class="modal-title fw-bold">
-                        Register New Hardware Asset
-                    </h5>
-
-                    <p class="text-muted mb-0">
-                        Add a new hardware record to the inventory database and hash table.
-                    </p>
-
-                </div>
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                ></button>
-
+            <div class="modal-header border-0 px-5 pt-5 pb-0">
+                <h5 class="modal-title fw-bold" id="registerAssetModalLabel">Register New Hardware</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
-            <div class="modal-body p-4 pt-0">
-
-                <form
-                    id="registerAssetForm"
-                    onsubmit="event.preventDefault(); addHardware();"
-                >
-
+            <div class="modal-body p-5 pt-4">
+                <form id="registerAssetForm" onsubmit="event.preventDefault(); addHardware();">
                     <div class="mb-3">
-
-                        <label class="form-label">
-                            Asset ID
-                        </label>
-
-                        <input
-                            type="text"
-                            class="form-control form-control-lg rounded-4"
-                            id="assetId"
-                            placeholder="Asset ID"
-                        >
-
+                        <label class="form-label fw-semibold">Hardware Name</label>
+                        <input type="text" class="form-control form-control-lg rounded-4" 
+                               id="name" placeholder="e.g., Logitech MX Master 3S" required>
                     </div>
 
                     <div class="mb-3">
-
-                        <label class="form-label">
-                            Hardware Name
-                        </label>
-
-                        <input
-                            type="text"
-                            class="form-control form-control-lg rounded-4"
-                            id="name"
-                            placeholder="Hardware name"
-                        >
-
-                    </div>
-
-                    <div class="mb-3">
-
-                        <label class="form-label">
-                            Category
-                        </label>
-
-                        <input
-                            type="text"
-                            class="form-control form-control-lg rounded-4"
-                            id="category"
-                            placeholder="Laptop"
-                        >
-
+                        <label class="form-label fw-semibold">Category</label>
+                        <select class="form-select class-control-lg rounded-4 style-dropdown" id="category" required>
+                            <option value="" disabled selected>Select a category...</option>
+                            <option value="Laptop">Laptop</option>
+                            <option value="Monitor">Monitor</option>
+                            <option value="Keyboard">Keyboard</option>
+                            <option value="Mouse">Mouse</option>
+                            <option value="Headset">Headset</option>
+                            <option value="Networking Equipment">Networking Equipment</option>
+                            <option value="Storage Devices">Storage Devices</option>
+                        </select>
                     </div>
 
                     <div class="mb-4">
-
-                        <label class="form-label">
-                            Quantity
-                        </label>
-
-                        <input
-                            type="number"
-                            class="form-control form-control-lg rounded-4"
-                            id="quantity"
-                            placeholder="10"
-                            min="1"
-                        >
-
+                        <label class="form-label fw-semibold">Quantity</label>
+                        <input type="number" class="form-control form-control-lg rounded-4" 
+                               id="quantity" placeholder="10" min="1" required>
                     </div>
 
-                    <button
-                        class="btn btn-dark w-100 py-3 rounded-pill fw-bold"
-                        type="submit"
-                    >
-
-                        <i class="bi bi-plus-circle-fill me-2"></i>
-                        Add to Inventory
-
+                    <button class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-sm" type="submit">
+                        <i class="bi bi-plus-circle me-2"></i> Register Asset
                     </button>
-
                 </form>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
 
-<!-- PROFILE MODAL -->
-<div class="modal fade" id="profileModal" tabindex="-1">
+<div class="modal fade" id="updateAssetModal" tabindex="-1" aria-labelledby="updateAssetModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg rounded-5">
-            <div class="modal-header border-0">
-                <div>
-                    <h5 class="modal-title fw-bold">Edit Profile</h5>
-                    <p class="text-muted mb-0">Update your profile name and role.</p>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-header border-0 px-5 pt-5 pb-0">
+                <h5 class="modal-title fw-bold" id="updateAssetModalLabel">Update Hardware Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form id="profileForm">
+            <div class="modal-body p-5 pt-4">
+                <form id="updateAssetForm" onsubmit="event.preventDefault(); updateHardware();">
+                    <input type="hidden" id="updateAssetId">
+
                     <div class="mb-3">
-                        <label class="form-label">Full Name</label>
-                        <input type="text" id="profileName" class="form-control rounded-4" required>
+                        <label class="form-label fw-semibold">Hardware Name</label>
+                        <input type="text" class="form-control form-control-lg rounded-4" 
+                               id="updateName" required>
                     </div>
+
                     <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" id="profileEmail" class="form-control rounded-4" required readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Role</label>
-                        <select id="profileRole" class="form-select rounded-pill" required>
-                            <option value="manager">Manager</option>
-                            <option value="staff">Staff</option>
+                        <label class="form-label fw-semibold">Category</label>
+                        <select class="form-select class-control-lg rounded-4 style-dropdown" id="updateCategory" required>
+                            <option value="" disabled>Select a category...</option>
+                            <option value="Laptop">Laptop</option>
+                            <option value="Monitor">Monitor</option>
+                            <option value="Keyboard">Keyboard</option>
+                            <option value="Mouse">Mouse</option>
+                            <option value="Headset">Headset</option>
+                            <option value="Networking Equipment">Networking Equipment</option>
+                            <option value="Storage Devices">Storage Devices</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold">Save Changes</button>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Quantity</label>
+                        <input type="number" class="form-control form-control-lg rounded-4" 
+                               id="updateQuantity" min="0" required>
+                    </div>
+
+                    <button class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-sm" type="submit">
+                        <i class="bi bi-pencil-square me-2"></i> Save Changes
+                    </button>
                 </form>
             </div>
         </div>

@@ -32,31 +32,39 @@ public class AuthController {
         return "redirect:/";
     }
 
-    @PostMapping("/login-user")
-    public String loginUser(
-            @RequestParam String email,
-            @RequestParam String password,
-            Model model,
-            HttpSession session
-    ) {
+ @PostMapping("/login-user")
+public String loginUser(
+        @RequestParam String email,
+        @RequestParam String password,
+        Model model,
+        HttpSession session
+) {
 
-        User user = userRepository.findByEmail(email);
+    User user = userRepository.findByEmail(email);
 
-        if (user != null && user.getPassword().equals(password)) {
-            session.setAttribute("loggedInUserEmail", email);
-
-            if (user.getRole().equals("staff")) {
-                return "redirect:/staff-assets";
-            }
-
-            if (user.getRole().equals("manager")) {
-                return "redirect:/dashboard";
-            }
-
-            return "redirect:/";
-        }
-
-        model.addAttribute("error", "Invalid email or password.");
+    //  ACCOUNT NOT FOUND
+    if (user == null) {
+        model.addAttribute("error", "Account doesn't exist.");
         return "login";
     }
+
+    //  WRONG PASSWORD
+    if (!user.getPassword().equals(password)) {
+        model.addAttribute("error", "Incorrect password.");
+        return "login";
+    }
+
+    // SUCCESS LOGIN
+    session.setAttribute("loggedInUserEmail", email);
+
+    if ("staff".equalsIgnoreCase(user.getRole())) {
+        return "redirect:/staff-assets";
+    }
+
+    if ("manager".equalsIgnoreCase(user.getRole())) {
+        return "redirect:/dashboard";
+    }
+
+    return "redirect:/";
+}
 }

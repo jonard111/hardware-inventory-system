@@ -16,12 +16,6 @@ public class HomeController {
     public String login() {
         return "login";
     }
-    
-
-    @GetMapping("/dashboard")
-    public String dashboard() {
-        return "index";
-    }
 
     @GetMapping("/register")
     public String register() {

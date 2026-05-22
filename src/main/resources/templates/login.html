@@ -12,14 +12,14 @@
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="../static/css/auth.css" th:href="@{/css/auth.css}">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
 </head>
 
 <body data-theme="dark" class="bg-overlay d-flex align-items-center justify-content-center p-3">
 
 <div class="auth-container position-relative overflow-hidden">
 
-    <!-- Background -->
+    <!-- Background Image -->
     <img
         src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=2070"
         class="auth-bg-image"
@@ -37,35 +37,40 @@
                 <h1 class="fw-bold display-5">HardwareNexus</h1>
 
                 <p class="text-white-50">
-                    Next-generation IT asset management terminal.
+                    Next-generation IT asset management system.
                 </p>
             </div>
         </div>
 
         <!-- RIGHT SIDE -->
-        <div class="col-lg-6 d-flex align-items-center">
+                
+        <div class="col-lg-6 d-flex align-items-center login-panel ">
 
-            <div class="login-panel w-100 p-4 p-lg-5 text-white">
+            <div class=" w-100 p-4 p-lg-5">
 
                 <h2 class="fw-bold mb-1">Welcome Back</h2>
-                <p class="text-light mb-3">Securely sign in to access hardware inventory and request management.</p>
+                <p class="text-light mb-3">
+                    Secure login to access inventory system.
+                </p>
 
-                <form id="loginForm" th:action="@{/login-user}" th:method="post" method="post" action="/login-user">
+                <!-- ERROR MESSAGE -->
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <span th:text="${error}"></span>
 
-                    <!-- ACCOUNT TYPE -->
-                    <div class="mb-3">
-                        <label for="loginRole" class="form-label text-light small">Account type</label>
-                        <select id="loginRole" name="role" class="form-select auth-input" aria-required="true" required>
-                            <option value="" selected disabled>Select account type</option>
-                            <option value="manager">Inventory Manager</option>
-                            <option value="staff">Staff Member</option>
-                        </select>
-                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
+                <!-- LOGIN FORM -->
+                <form id="loginForm" th:action="@{/login-user}" method="post">
 
                     <!-- EMAIL -->
                     <div class="mb-3">
                         <label class="form-label text-light small">Email</label>
-                        <input type="email" id="loginEmail" name="email" class="form-control auth-input" required>
+                        <input type="email" id="loginEmail" name="email"
+                               class="form-control auth-input"
+                               placeholder="Enter your email"
+                               required>
                     </div>
 
                     <!-- PASSWORD -->
@@ -77,6 +82,7 @@
                                    id="password"
                                    name="password"
                                    class="form-control auth-input"
+                                   placeholder="Enter your password"
                                    required>
 
                             <button type="button"
@@ -87,34 +93,24 @@
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="rememberMe">
-                            <label class="form-check-label text-light small" for="rememberMe">
-                                Remember me
-                            </label>
-                        </div>
-                       
-                    </div>
-
-                    <!-- SIGN IN BUTTON -->
-                    <button type="submit" class="btn btn-system-primary  w-100 py-2 fw-bold">
+                    <!-- LOGIN BUTTON -->
+                    <button type="submit" class="btn btn-system-primary w-100 py-2 fw-bold">
                         <i class="bi bi-box-arrow-in-right me-2"></i>
                         Sign In
                     </button>
 
                 </form>
-                    <!-- REGISTER SECTION (RESTORED) -->
-                    <div class="text-center mt-4">
-                        <small class="text-light">
-                            Don’t have an account?
-                            <a th:href="@{/register}" href="/register" class="text-white fw-bold text-decoration-underline ">
-                                Sign Up
-                            </a>
-                        </small>
-                    </div>
 
-        
+                <!-- REGISTER LINK -->
+                <div class="text-center mt-4">
+                    <small class="text-light">
+                        Don’t have an account?
+                        <a th:href="@{/register}"
+                           class="text-white fw-bold text-decoration-underline">
+                            Sign Up
+                        </a>
+                    </small>
+                </div>
 
             </div>
 
@@ -123,21 +119,22 @@
     </div>
 </div>
 
-<!-- SCRIPT -->
+<!-- PASSWORD TOGGLE SCRIPT -->
 <script>
 function togglePassword(id) {
     const input = document.getElementById(id);
     const icon = document.getElementById(id + "-icon");
 
-    if (input.type === "password") {
-        input.type = "text";
-        icon.classList.replace("bi-eye", "bi-eye-slash");
-    } else {
-        input.type = "password";
-        icon.classList.replace("bi-eye-slash", "bi-eye");
-    }
+    if (!input || !icon) return;
+
+    const isPassword = input.type === "password";
+
+    input.type = isPassword ? "text" : "password";
+
+    icon.classList.toggle("bi-eye", !isPassword);
+    icon.classList.toggle("bi-eye-slash", isPassword);
 }
 </script>
-<script src="../static/js/auth.js" th:src="@{/js/auth.js}"></script>
+
 </body>
 </html>

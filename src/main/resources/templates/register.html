@@ -58,16 +58,14 @@
                     Quickly set up secure access to the HardwareNexus inventory portal.
                 </p>
 
-                <form id="registerForm" th:action="@{/register-user}" th:method="post" method="post" action="/register-user">
-                    <!-- ROLE -->
-                    <div class="mb-3">
-                        <label class="form-label text-light small">Account type</label>
-                        <select id="registerRole" name="role" class="form-select auth-input" required>
-                            <option value="" disabled selected>Select your role</option>
-                            <option value="manager">Inventory Manager</option>
-                            <option value="staff">Staff</option>
-                        </select>
-                    </div>
+                <form id="registerForm"
+                      th:action="@{/register-user}"
+                      th:method="post"
+                      method="post"
+                      action="/register-user">
+
+                    <!-- HIDDEN ROLE (always Inventory Manager) -->
+                    <input type="hidden" name="role" value="staff">
 
                     <!-- NAME -->
                     <div class="mb-3">
@@ -129,7 +127,8 @@
                     <div class="text-center mt-3">
                         <small class="text-light">
                             Already have an account?
-                            <a th:href="@{/login}" href="/login"class="text-white fw-semibold text-decoration-underline">
+                            <a th:href="@{/login}" href="/login"
+                               class="text-white fw-semibold text-decoration-underline">
                                 Sign in
                             </a>
                         </small>
@@ -158,6 +157,8 @@ function togglePassword(id) {
     }
 }
 </script>
+
 <script src="../static/js/auth.js" th:src="@{/js/auth.js}"></script>
+
 </body>
 </html>

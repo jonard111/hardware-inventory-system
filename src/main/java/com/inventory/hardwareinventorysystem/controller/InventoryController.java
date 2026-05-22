@@ -2,6 +2,7 @@ package com.inventory.hardwareinventorysystem.controller;
 
 import com.inventory.hardwareinventorysystem.model.Hardware;
 import com.inventory.hardwareinventorysystem.service.InventoryService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,6 +29,19 @@ public class InventoryController {
         return service.searchHardware(assetId);
     }
 
+    @PutMapping("/update/{assetId}")
+    public ResponseEntity<String> updateHardware(
+            @PathVariable String assetId,
+            @RequestBody Hardware updated
+    ) {
+        try {
+            String result = service.updateHardware(assetId, updated);
+            return ResponseEntity.ok(result);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @DeleteMapping("/delete/{assetId}")
     public String deleteHardware(@PathVariable String assetId) {
         boolean deleted = service.deleteHardware(assetId);
@@ -42,8 +56,8 @@ public class InventoryController {
     @GetMapping("/stats")
     public Object getStats() {
         return new Object() {
-            public final int bucketSize = service.getBucketSize();
-            public final int itemCount = service.getItemCount();
+            public final int    bucketSize = service.getBucketSize();
+            public final int    itemCount  = service.getItemCount();
             public final double loadFactor = service.getLoadFactor();
         };
     }
