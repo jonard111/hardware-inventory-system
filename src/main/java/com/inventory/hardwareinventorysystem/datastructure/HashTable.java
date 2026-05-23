@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 /**
  * Hash table implementation using separate chaining.
- * Enforces a strict static capacity of 11 buckets.
+ * Enforces a strict static capacity of 10 buckets.
  */
 public class HashTable {
 
@@ -15,8 +15,8 @@ public class HashTable {
 
     @SuppressWarnings("unchecked")
     public HashTable(int ignoredSize) {
-        // Enforce the size constraint of 11 buckets
-        this.size = 11;
+        // Enforce the size constraint of 10 buckets
+        this.size = 10;
         this.itemCount = 0;
 
         table = new LinkedList[this.size];
