@@ -1,22 +1,51 @@
 function validateRegisterForm(event) {
+    clearMessages();
 
-    const password = document.getElementById("regPassword")?.value.trim();
-    const confirmPassword = document.getElementById("confirmPassword")?.value.trim();
+    const firstName = document.querySelector("[name='firstName']");
+    const lastName = document.querySelector("[name='lastName']");
+    const email = document.querySelector("[name='email']");
+    const password = document.getElementById("regPassword");
+    const confirmPassword = document.getElementById("confirmPassword");
 
-    // If fields are missing, let backend handle it
-    if (!password || !confirmPassword) return true;
+    const firstNameVal = firstName ? firstName.value.trim() : "";
+    const lastNameVal = lastName ? lastName.value.trim() : "";
+    const emailVal = email ? email.value.trim() : "";
+    const passwordVal = password ? password.value : "";
+    const confirmPasswordVal = confirmPassword ? confirmPassword.value : "";
 
-    if (password !== confirmPassword) {
-        event.preventDefault();
-        showAlert("Passwords do not match.", "danger");
+    // Empty fields
+    if (!firstNameVal || !lastNameVal || !emailVal || !passwordVal || !confirmPasswordVal) {
+        if (event) event.preventDefault();
+        showError("All fields are required.");
         return false;
     }
 
-    return true;
+    // Email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailVal)) {
+        if (event) event.preventDefault();
+        showError("Please enter a valid email address.");
+        return false;
+    }
+
+    // Password length
+    if (passwordVal.length < 6) {
+        if (event) event.preventDefault();
+        showError("Password must be at least 6 characters.");
+        return false;
+    }
+
+    // Password match
+    if (passwordVal !== confirmPasswordVal) {
+        if (event) event.preventDefault();
+        showError("Passwords do not match.");
+        return false;
+    }
+
+    return true; // allow submit
 }
 
 function togglePassword(id) {
-
     const input = document.getElementById(id);
     const icon = document.getElementById(`${id}-icon`);
 
@@ -31,77 +60,41 @@ function togglePassword(id) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-
     const registerForm = document.getElementById("registerForm");
-
     if (!registerForm) return;
 
     registerForm.addEventListener("submit", validateRegisterForm);
 });
 
-function showFieldError(inputId, message) {
-    const input = document.getElementById(inputId);
-    if (!input) return;
-
-    input.classList.add("is-invalid");
-
-    let feedback = input.nextElementSibling;
-    if (feedback && feedback.classList.contains("invalid-feedback")) {
-        feedback.innerText = message;
-    }
-}
-
 function showError(message) {
     const box = document.getElementById("errorBox");
+    if (!box) return;
+    
     box.classList.remove("d-none");
-    box.innerText = message;
+    
+    const msgSpan = document.getElementById("errorMessage");
+    if (msgSpan) {
+        msgSpan.innerText = message;
+    } else {
+        box.innerText = message;
+    }
 }
 
 function showSuccess(message) {
     const box = document.getElementById("successBox");
+    if (!box) return;
+
     box.classList.remove("d-none");
     box.innerText = message;
 }
 
 function clearMessages() {
-    document.getElementById("errorBox").classList.add("d-none");
-    document.getElementById("successBox").classList.add("d-none");
-}
-
-// MAIN VALIDATION
-function validateRegisterForm() {
-    clearMessages();
-
-    const firstName = document.querySelector("[name='firstName']").value.trim();
-    const lastName = document.querySelector("[name='lastName']").value.trim();
-    const email = document.querySelector("[name='email']").value.trim();
-    const password = document.getElementById("regPassword").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
-
-    // Empty fields
-    if (!firstName || !lastName || !email || !password || !confirmPassword) {
-        showError("All fields are required.");
-        return false;
+    const errorBox = document.getElementById("errorBox");
+    if (errorBox) {
+        errorBox.classList.add("d-none");
     }
-
-    // Email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        showError("Please enter a valid email address.");
-        return false;
+    const successBox = document.getElementById("successBox");
+    if (successBox) {
+        successBox.classList.add("d-none");
     }
-
-    // Password length
-    if (password.length < 6) {
-        showError("Password must be at least 6 characters.");
-        return false;
-    }
-
-    // Password match
-    if (password !== confirmPassword) {
-        showError("Passwords do not match.");
-        return false;
-    }
-
-    return true; // allow submit
 }

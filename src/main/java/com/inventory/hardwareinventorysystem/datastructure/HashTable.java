@@ -1,6 +1,7 @@
 package com.inventory.hardwareinventorysystem.datastructure;
 
 import com.inventory.hardwareinventorysystem.model.Hardware;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -16,7 +17,7 @@ public class HashTable {
     @SuppressWarnings("unchecked")
     public HashTable(int ignoredSize) {
         // Enforce the size constraint of 10 buckets
-        this.size = 10;
+        this.size = 11;
         this.itemCount = 0;
 
         table = new LinkedList[this.size];
@@ -74,9 +75,11 @@ public class HashTable {
     public boolean delete(String assetId) {
         int index = hash(assetId);
 
-        for (Hardware item : table[index]) {
+        Iterator<Hardware> iterator = table[index].iterator();
+        while (iterator.hasNext()) {
+            Hardware item = iterator.next();
             if (item.getAssetId().equalsIgnoreCase(assetId)) {
-                table[index].remove(item);
+                iterator.remove();
                 itemCount--;
                 return true;
             }

@@ -58,6 +58,20 @@
                     Quickly set up secure access to the HardwareNexus inventory portal.
                 </p>
 
+                <!-- ERROR MESSAGE -->
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <span th:text="${error}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                
+                <!-- JS ERROR BOX -->
+                <div id="errorBox" class="alert alert-danger alert-dismissible fade show d-none" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <span id="errorMessage"></span>
+                    <button type="button" class="btn-close" onclick="document.getElementById('errorBox').classList.add('d-none')"></button>
+                </div>
+
                 <form id="registerForm"
                       th:action="@{/register-user}"
                       th:method="post"

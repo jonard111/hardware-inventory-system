@@ -226,6 +226,16 @@ function renderBuckets(data) {
     let html = "";
     currentAssetList = [];
 
+    const topologySearchInput = document.getElementById("topologySearchInput");
+    if (topologySearchInput) {
+        topologySearchInput.value = "";
+    }
+    const topologySearchFeedback = document.getElementById("topologySearchFeedback");
+    if (topologySearchFeedback) {
+        topologySearchFeedback.classList.add("d-none");
+        topologySearchFeedback.innerHTML = "";
+    }
+
     data.forEach((bucket, index) => {
         bucket.forEach(item => currentAssetList.push({ ...item, bucket: index }));
 
@@ -517,6 +527,63 @@ function filterCategory() {
         const rowCategory = (row.getAttribute("data-category") ?? "").toLowerCase();
         row.style.display = (selected === "all" || rowCategory === selected) ? "" : "none";
     });
+}
+
+/* ─── HASH TOPOLOGY SEARCH ──────────────── */
+
+function searchTopology() {
+    const input = document.getElementById("topologySearchInput");
+    const feedback = document.getElementById("topologySearchFeedback");
+    if (!input || !feedback) return;
+
+    const query = input.value.trim().toLowerCase();
+
+    // Clear previous highlights
+    document.querySelectorAll(".chain-node-item").forEach(node => {
+        node.classList.remove("highlighted-node");
+    });
+
+    if (!query) {
+        feedback.classList.add("d-none");
+        feedback.innerHTML = "";
+        return;
+    }
+
+    // Search in currentAssetList.
+    // Note: currentAssetList has items with property 'name' and 'bucket' (which is the bucket index)
+    const foundItems = currentAssetList.filter(item => item.name && item.name.toLowerCase().includes(query));
+
+    if (foundItems.length === 0) {
+        feedback.classList.remove("d-none");
+        feedback.className = "mt-2 text-danger fw-semibold small animate-fade-in";
+        feedback.innerText = `No assets match name "${input.value}"`;
+        return;
+    }
+
+    // If we have matches, let's highlight them in the DOM and display the index
+    feedback.classList.remove("d-none");
+    feedback.className = "mt-2 text-success fw-semibold small animate-fade-in";
+
+    const indexMessages = foundItems.map(item => {
+        // Find matching nodes in the DOM and highlight them
+        const nodes = document.querySelectorAll(".chain-node-item");
+        nodes.forEach(node => {
+            const header = node.querySelector(".node-header");
+            const nameEl = node.querySelector(".node-body strong");
+            if (header && nameEl) {
+                const idText = header.innerText.replace("ID: ", "").trim();
+                const nameText = nameEl.innerText.trim();
+                
+                if (idText === item.assetId && nameText === item.name) {
+                    node.classList.add("highlighted-node");
+                }
+            }
+        });
+
+        return `"${item.name}" (ID: ${item.assetId}) is inserted in Slot Index ${item.bucket}`;
+    });
+
+    feedback.innerHTML = indexMessages.join("<br>");
 }
 
 /* ─── DOM READY ─────────────────────────── */

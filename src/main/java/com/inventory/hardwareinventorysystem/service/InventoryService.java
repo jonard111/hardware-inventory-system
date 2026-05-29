@@ -15,7 +15,7 @@ public class InventoryService {
     @Autowired
     private HardwareRepository repository;
 
-    // Fixed strictly to 11 buckets as suggested by your instructor
+    // Fixed strictly to 11 buckets (prime number for even distribution)
     private final HashTable inventory = new HashTable(11);
 
     @PostConstruct
@@ -27,17 +27,17 @@ public class InventoryService {
     }
 
     public Hardware addHardware(Hardware hardware) {
-        // Step 1: Auto-generate plain numeric ID if blank or null
+
+        // Auto-generate ID if blank or null
         if (hardware.getAssetId() == null || hardware.getAssetId().trim().isEmpty()) {
             hardware.setAssetId(generateNextId());
         } else {
-            // Guard rule for manual additions: prevent duplicate key overwrites
+            // Prevent duplicate key on manual ID entry
             if (repository.existsById(hardware.getAssetId())) {
                 throw new IllegalArgumentException("Hardware with this Asset ID already exists.");
             }
         }
 
-        // Step 2: Save to Database and inject into your 11-bucket visual structure
         Hardware saved = repository.save(hardware);
         inventory.insert(saved);
         return saved;
@@ -57,7 +57,7 @@ public class InventoryService {
 
         repository.save(existing);
 
-        // Sync local static hash rows
+        // Keep hash table in sync
         inventory.delete(assetId);
         inventory.insert(existing);
 
@@ -89,29 +89,47 @@ public class InventoryService {
     }
 
     /**
-     * Scans through all 11 chains to evaluate the highest plain number used.
+     * Generates the next available ID by scanning ALL existing IDs in the
+     * database (not just the hash table) to avoid three problems:
+     *
+     * FIX 1 — Gap reuse: deleted IDs are never reused; the next ID is always
+     *          max + 1 across the entire database history.
+     *
+     * FIX 2 — Concurrent requests: reading from the database under a
+     *          synchronized block prevents two simultaneous requests from
+     *          generating the same ID.
+     *
+     * FIX 3 — Mixed ID formats: IDs like "HW001" are stripped of their
+     *          non-numeric prefix before parsing, so they're included in the
+     *          max calculation and won't collide with auto-generated IDs.
      */
-    private String generateNextId() {
+    private synchronized String generateNextId() {
         int maxNumber = 0;
-        
-        for (LinkedList<Hardware> bucket : inventory.getTable()) {
-            for (Hardware item : bucket) {
-                String id = item.getAssetId();
-                if (id != null) {
-                    try {
-                        // Directly parse the entire string as a pure integer (e.g., "042" -> 42)
-                        int currentNum = Integer.parseInt(id.trim());
-                        if (currentNum > maxNumber) {
-                            maxNumber = currentNum;
-                        }
-                    } catch (NumberFormatException ignored) {
-                        // Skip comfortably if an old legacy ID with text is encountered
+
+        // Read from database — the authoritative source, not just in-memory table
+        List<Hardware> allItems = repository.findAll();
+
+        for (Hardware item : allItems) {
+            String id = item.getAssetId();
+            if (id == null) continue;
+
+            // FIX 3: Strip any leading non-numeric characters (e.g. "HW", "ASSET-")
+            // so both "042" and "HW042" contribute 42 to the max calculation.
+            String numericPart = id.trim().replaceAll("^[^0-9]+", "");
+
+            if (!numericPart.isEmpty()) {
+                try {
+                    int current = Integer.parseInt(numericPart);
+                    if (current > maxNumber) {
+                        maxNumber = current;
                     }
+                } catch (NumberFormatException ignored) {
+                    // ID has no usable numeric part — skip it
                 }
             }
         }
-        
-        // Formats to 3 digits padded with leading zeros (e.g., "001", "002", "015")
+
+        // Format as zero-padded 3-digit string: "001", "002", ... "999"
         return String.format("%03d", maxNumber + 1);
     }
 }

@@ -85,7 +85,7 @@
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="#" onclick="setInventoryView('requests')"><i class="bi bi-table me-2"></i>Asset Request Approval</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-danger" th:href="@{/login}" href="/login"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
+                    <li><a class="dropdown-item text-danger" th:href="@{/logout}" href="/logout"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -355,14 +355,30 @@
 
                     <div class="card border-0 shadow-sm rounded-5 p-4 dashboard-main-card">
                         
-                        <div class="mb-4">
-                            <div class="d-flex align-items-center gap-2 mb-1">
-                                <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1 text-uppercase fw-bold tracing-wide small">Data Structure Live View</span>
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                            <div>
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1 text-uppercase fw-bold tracing-wide small">Data Structure Live View</span>
+                                </div>
+                                <h2 class="h5 mb-1 fw-bold text-dark">Separate Chaining Distribution Map</h2>
+                                <p class="text-muted small mb-0">
+                                    Calculating storage addresses utilizing formula: <code class="bg-light px-2 py-1 rounded text-danger fw-bold">Slot Index = Asset ID % 11</code>.
+                                </p>
                             </div>
-                            <h2 class="h5 mb-1 fw-bold text-dark">Separate Chaining Distribution Map</h2>
-                            <p class="text-muted small mb-0">
-                                Calculating storage addresses utilizing formula: <code class="bg-light px-2 py-1 rounded text-danger fw-bold">Slot Index = Asset ID % 10</code>.
-                            </p>
+                            <div class="topology-search-wrapper ms-auto" style="min-width: 320px;">
+                                <div class="position-relative d-flex align-items-center gap-2 bg-light px-3 py-2 rounded-pill border border-secondary-subtle">
+                                    <i class="bi bi-search text-muted"></i>
+                                    <input
+                                        id="topologySearchInput"
+                                        type="text"
+                                        class="form-control border-0 p-0 bg-transparent"
+                                        placeholder="Search asset by name..."
+                                        style="outline: none; box-shadow: none;"
+                                        oninput="searchTopology()"
+                                    >
+                                </div>
+                                <div id="topologySearchFeedback" class="mt-2 text-primary fw-semibold small d-none"></div>
+                            </div>
                         </div>
 
                         <div id="buckets" class="d-flex flex-column gap-3">
